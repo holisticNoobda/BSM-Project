@@ -1,0 +1,13 @@
+# Paths that DVC must never try to track.
+# Images are tracked by their manifest/metadata only, never by content hash,
+# so that no raw dataset can reach a remote or the git object store.
+
+data/raw/
+data/processed/
+data/augmented/
+**/*.jpg
+**/*.jpeg
+**/*.png
+**/*.bmp
+**/*.tif
+**/*.tiff

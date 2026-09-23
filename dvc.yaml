@@ -1,0 +1,48 @@
+# DVC pipeline definition for the BSM mineral classification project.
+#
+# There is deliberately NO DVC remote configured and none is required: cloning
+# this repository and running the notebooks needs no credentials.
+#
+# DVC tracks pipeline *metadata and stages* here. Raw and processed image bytes
+# are excluded by .dvcignore, so no dataset content can enter a remote or the
+# git object store.
+#
+# Usage (optional):
+#   pip install -r requirements.txt
+#   dvc repro preprocess
+#   dvc repro train
+#   dvc repro compare
+
+stages:
+  preprocess:
+    cmd: >-
+      jupyter nbconvert --to notebook --execute
+      notebooks/01_Data_Preprocessing_and_EDA.ipynb --inplace
+    deps:
+      - notebooks/01_Data_Preprocessing_and_EDA.ipynb
+    outs:
+      - results/dataset_summary
+      - results/preprocessing
+      - results/augmentation
+
+  train:
+    cmd: >-
+      jupyter nbconvert --to notebook --execute
+      notebooks/02_Model_Experiments.ipynb --inplace
+    deps:
+      - notebooks/02_Model_Experiments.ipynb
+      - results/preprocessing/final_split_manifest.csv
+    outs:
+      - results/metrics
+      - results/confusion_matrices
+      - results/training_curves
+
+  compare:
+    cmd: >-
+      jupyter nbconvert --to notebook --execute
+      notebooks/03_Final_Comparison.ipynb --inplace
+    deps:
+      - notebooks/03_Final_Comparison.ipynb
+      - results/metrics/final_results.csv
+    outs:
+      - results/comparisons
