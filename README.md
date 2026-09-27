@@ -101,7 +101,82 @@ On Colab, in order:
 3. `03_Final_Comparison.ipynb` — reads the generated CSVs only. **Does not
    retrain anything.**
 
-## 7. Checkpoints
+The notebooks in this repository are the **executed** copies, with their outputs
+intact, so the delivered code carries its own evidence of having run.
+
+### Running headless (`nbconvert`) on Colab — required first step
+
+Colab Secrets and `drive.mount()` are only reachable from the **interactive
+Colab UI kernel**. `jupyter nbconvert --execute` starts a subprocess kernel where
+they are unavailable: `userdata.get()` blocks and then raises `TimeoutException`,
+and the Drive mount fails. Run this once in a Colab **UI cell** before any
+headless run:
+
+```python
+from google.colab import userdata, drive
+import json, os
+
+json.dump({"username": userdata.get("KAGGLE_USERNAME"),
+           "key": userdata.get("KAGGLE_KEY")},
+          open("/content/kaggle.json", "w"))
+os.chmod("/content/kaggle.json", 0o600)
+drive.mount("/content/drive")
+```
+
+Notebook 01 looks for credentials in the order `/content/kaggle.json` →
+environment variables → Colab secrets, and notebook 02 reuses an existing
+`/content/drive/MyDrive` rather than re-mounting.
+
+```bash
+git clone https://github.com/holisticNoobda/BSM-Project.git && cd BSM-Project
+jupyter nbconvert --to notebook --execute notebooks/01_Data_Preprocessing_and_EDA.ipynb \
+  --inplace --ExecutePreprocessor.timeout=1800
+nohup jupyter nbconvert --to notebook --execute notebooks/02_Model_Experiments.ipynb \
+  --inplace --ExecutePreprocessor.timeout=14400 > /content/nb02.log 2>&1 &
+```
+
+Notebook 02 takes roughly an hour on a T4. Poll the log from another cell while
+it runs; notebook 03 is then quick and produces a single
+`BSM_results_<timestamp>.zip` on Drive containing all results plus the three
+executed notebooks, with `.pth` files excluded.
+
+## 7. Results
+
+Executed on Google Colab, Tesla T4, 60 epochs per model, batch 32, Adam `1e-4`,
+seed 42, AMP. Split 3072 train / 55 validation / 56 test (source-grouped).
+Total training time 56 minutes for all four models.
+
+| Model | test accuracy | macro F1 | spec (macro) | best epoch | 95% CI (Wilson) | time |
+|---|---|---|---|---|---|---|
+| ResNet18 | 0.8036 (45/56) | 0.8018 | 0.9608 | 30 | 0.682 – 0.887 | 7.1 min |
+| VGG16 | 0.7679 (43/56) | 0.7667 | 0.9536 | 4 | 0.642 – 0.859 | 26.2 min |
+| ResNet34 | 0.7321 (41/56) | 0.7303 | 0.9464 | 2 | 0.604 – 0.830 | 9.2 min |
+| D_ResNet (=ResNet50) | 0.6964 (39/56) | 0.6964 | 0.9393 | 8 | 0.567 – 0.801 | 13.5 min |
+
+**Read this before quoting the ranking.** Two limitations bound what these
+numbers mean, and both are properties of the dataset rather than the models:
+
+1. **The accuracy ranking is not statistically significant.** The best and
+   weakest models differ by **6 test images**, and their 95% Wilson intervals
+   overlap. No claim is made that any architecture is better than another here;
+   the ordering is a point estimate from a single seed on 56 test images.
+2. **There are only 256 unique photographs.** The 3072 training samples are 256
+   sources expanded by 6 rotations x 2 flips. Augmentation multiplies pixels,
+   not information. Every model reached ~1.000 training accuracy by epoch 2
+   (VGG16 by epoch 6) and then overfitted for the remaining ~55 epochs. The
+   60-epoch budget was run in full as specified, but it is not the operative
+   setting — peak validation accuracy arrives in epochs 2–30.
+
+A known confound, carried from a separate audit of this same dataset:
+background composition was found to correlate with class, which would make
+every figure above an **upper bound** on mineral identification. That analysis
+was not re-run in this project, so it is reported as a risk, not a result.
+
+Full discussion, including the paper-vs-our comparison and the two paper
+elements that were not reproduced, is in
+[`results/comparisons/final_discussion.md`](results/comparisons/final_discussion.md).
+
+## 8. Checkpoints
 
 Best-validation-accuracy weights are written to Google Drive at:
 
@@ -115,7 +190,7 @@ Best-validation-accuracy weights are written to Google Drive at:
 
 `.pth` / `.pt` / `.ckpt` files are git-ignored and are never pushed.
 
-## 8. Not reproduced
+## 9. Not reproduced
 
 | Paper element | Status |
 |---|---|
@@ -124,7 +199,7 @@ Best-validation-accuracy weights are written to Google Drive at:
 
 Neither is fabricated or estimated.
 
-## 9. Configuration
+## 10. Configuration
 
 | Parameter | Value | Source |
 |---|---|---|
@@ -138,6 +213,6 @@ Neither is fabricated or estimated.
 | Seed | 42 | reproducibility |
 | Model selection | best validation accuracy | engineering choice |
 
-## 10. License / attribution
+## 11. License / attribution
 
 Dataset © Prasannavenkatesan T., distributed via Kaggle and Mendeley Data.

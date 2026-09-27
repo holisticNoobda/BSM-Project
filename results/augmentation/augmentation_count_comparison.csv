@@ -1,0 +1,7 @@
+quantity,value,note
+paper_reported_total_images,357,Paper text states 357; the paper's own six class counts sum to 367.
+paper_reported_augmented_images,1468,"Paper reports ~1468 = 367 x 4. Reference target only, never forced."
+our_actual_total_images,367,Images actually present and valid after wrangling.
+our_source_images_used_for_training,256,70% group-level training split.
+our_actual_augmented_images,3072,256 sources x 6 rotations x 2 flip states.
+difference_vs_paper_augmented,1604,"Differs because (a) augmentation is applied to the 70% training split only, not the whole dataset, and (b) each rotation is paired with both flip states, giving 12 variants per source rather than 4. The paper does not state how augmented variants were split, so its 1468 cannot be matched without reintroducing train/test leakage."

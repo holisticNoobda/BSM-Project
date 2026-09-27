@@ -1,0 +1,5 @@
+field,n_records,n_missing,n_outliers,n_imputed,median_value,min_before,max_before,strategy,note
+width,367,0,0,0,253.0,102.0,765.0,median,no missing or invalid values required imputation
+height,367,0,0,0,192.0,91.0,641.0,median,no missing or invalid values required imputation
+channels,367,0,0,0,3.0,3.0,3.0,median,no missing or invalid values required imputation
+file_size_bytes,367,0,0,0,14588.0,3020.0,168769.0,median,no missing or invalid values required imputation

@@ -1,0 +1,40 @@
+key,value
+timestamp_utc,2026-09-30T20:45:18+00:00
+git_commit,ec4cb4b853db5e018c02b7db76acbd86c54e6427
+seed,42
+project_root,/content/BSM-Project
+class_root,/content/BSM-Project/data/raw/BSM
+class_order,"Ilmenite, Rutile, Zircon, Garnet, Monazite, Sillimanite"
+n_classes,6
+image_size,224x224x3
+raw_files_discovered,367
+files_retained_after_wrangling,367
+files_excluded,0
+corrupt_or_undecodable,0
+exact_duplicate_redundant_copies,0
+duplicate_groups,367
+paper_reported_images,357
+paper_reported_augmented_images,1468
+actual_augmented_images,3072
+augmentation_rotations,"0, 30, 45, 90, 180, 270"
+augmentation_flip_states,"False, True"
+augmentation_scope,train split only (leakage safeguard)
+split_ratios,train 0.70 / val 0.15 / test 0.15
+split_unit,source-image group_id
+split_seed,42
+split_train_sources,256
+split_val_sources,55
+split_test_sources,56
+samples_train,3072
+samples_val,55
+samples_test,56
+leakage_check,PASSED - no group spans splits; no augmented val/test samples
+sha256_raw_inventory,967a983713f86dc5d455e8b10f57732a89745ae9d141e7b3c407f0bc680cd682
+sha256_clean_manifest,cb10974335491019e2a97119cf660b90bb50626d678d1de5f38fadeb62da534f
+sha256_augmentation_manifest,6017c25b23483923789c491f34e4a1ce0b3f539ce3d2958a68c27ca40224cfad
+sha256_final_split_manifest,aaf9657bd54234bab042a5c7ac133ce62403b516118ceb07a000caa4b320a094
+python_version,3.13.15
+numpy_version,2.1.3
+pandas_version,2.2.3
+pillow_version,11.3.0
+sklearn_version,1.6.1

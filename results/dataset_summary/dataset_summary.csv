@@ -1,0 +1,8 @@
+class,actual_count,paper_reported_count,difference,paper_total_row_sum
+Ilmenite,62,60,2,357
+Rutile,66,62,4,357
+Zircon,59,60,-1,357
+Garnet,60,66,-6,357
+Monazite,60,60,0,357
+Sillimanite,60,59,1,357
+TOTAL,367,367,0,357

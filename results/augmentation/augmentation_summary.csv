@@ -1,0 +1,8 @@
+class,source_images,rotations_per_image,flip_states_per_rotation,variants_per_source,augmented_images
+Ilmenite,43,6,2,12,516
+Rutile,46,6,2,12,552
+Zircon,41,6,2,12,492
+Garnet,42,6,2,12,504
+Monazite,42,6,2,12,504
+Sillimanite,42,6,2,12,504
+TOTAL,256,6,2,12,3072
